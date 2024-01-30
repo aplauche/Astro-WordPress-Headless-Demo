@@ -1,0 +1,100 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../components/Layout.astro";
+
+const response = await fetch("http://faker-headless.local/graphql",
+  {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      query: `
+				query IndexPage {
+					posts(where: {orderby: {field: DATE, order: DESC}}) {
+						nodes {
+							slug
+							date
+							title
+							excerpt
+							featuredImage {
+								node {
+									sourceUrl
+								}
+							}
+						}
+					}
+				}
+      `
+    }),
+  });
+
+// destructure data from our JSON
+const { data } = await response.json();
+
+//  assign the array of nodes to "posts" variable for usability
+const posts = data.posts.nodes
+
+console.log(posts)
+---
+
+<Layout>
+	<div class="bg-slate-200 rounded-lg py-12">
+		<h1 class="text-center text-3xl">Our Articles</h1>
+	</div>
+	
+	<div class="flex flex-wrap pt-5 -mx-2.5">
+		{posts.map(post => (
+			<div class="lg:w-1/3 px-2.5 mb-5">
+				<article class="rounded-lg bg-white shadow-lg p-5 h-full flex flex-col items-start justify-between">
+					<div>
+						<Image class="w-full object-cover aspect-2/3 mb-5" alt="" src={post.featuredImage.node.sourceUrl} width={600} height={400} />
+						<h2 class="text-xl font-bold mb-5">{post.title}</h2>
+						<p class="mb-6">{post.excerpt.replace(/<(.|\n)*?>/g, '')}</p>
+					</div>
+					<a class="inline-block bg-slate-600 text-white rounded-md px-6 py-3 hover:bg-slate-500" href={`/${post.slug}`}>Read More</a>
+				</article>
+			</div>
+		))}
+	</div>
+</Layout>
+		<!-- <div class="lg:w-1/3 px-2.5 mb-5">
+			<article class="rounded-lg bg-white shadow-lg p-5">
+				<h2 class="text-xl font-bold mb-5">Lorem Ipsum</h2>
+				<p class="mb-6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, necessitatibus. Animi amet provident, repellendus ut necessitatibus quod dolores fugiat architecto reprehenderit commodi. Eum, iure necessitatibus.</p>
+				<a class="inline-block bg-slate-600 text-white rounded-md px-6 py-3 hover:bg-slate-500" href="#">Read More</a>
+			</article>
+		</div>
+		<div class="lg:w-1/3 px-2.5 mb-5">
+			<article class="rounded-lg bg-white shadow-lg p-5">
+				<h2 class="text-xl font-bold mb-5">Lorem Ipsum</h2>
+				<p class="mb-6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, necessitatibus. Animi amet provident, repellendus ut necessitatibus quod dolores fugiat architecto reprehenderit commodi. Eum, iure necessitatibus.</p>
+				<a class="inline-block bg-slate-600 text-white rounded-md px-6 py-3 hover:bg-slate-500" href="#">Read More</a>
+			</article>
+		</div>
+		<div class="lg:w-1/3 px-2.5 mb-5">
+			<article class="rounded-lg bg-white shadow-lg p-5">
+				<h2 class="text-xl font-bold mb-5">Lorem Ipsum</h2>
+				<p class="mb-6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, necessitatibus. Animi amet provident, repellendus ut necessitatibus quod dolores fugiat architecto reprehenderit commodi. Eum, iure necessitatibus.</p>
+				<a class="inline-block bg-slate-600 text-white rounded-md px-6 py-3 hover:bg-slate-500" href="#">Read More</a>
+			</article>
+		</div>
+		<div class="lg:w-1/3 px-2.5 mb-5">
+			<article class="rounded-lg bg-white shadow-lg p-5">
+				<h2 class="text-xl font-bold mb-5">Lorem Ipsum</h2>
+				<p class="mb-6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, necessitatibus. Animi amet provident, repellendus ut necessitatibus quod dolores fugiat architecto reprehenderit commodi. Eum, iure necessitatibus.</p>
+				<a class="inline-block bg-slate-600 text-white rounded-md px-6 py-3 hover:bg-slate-500" href="#">Read More</a>
+			</article>
+		</div>
+		<div class="lg:w-1/3 px-2.5 mb-5">
+			<article class="rounded-lg bg-white shadow-lg p-5">
+				<h2 class="text-xl font-bold mb-5">Lorem Ipsum</h2>
+				<p class="mb-6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, necessitatibus. Animi amet provident, repellendus ut necessitatibus quod dolores fugiat architecto reprehenderit commodi. Eum, iure necessitatibus.</p>
+				<a class="inline-block bg-slate-600 text-white rounded-md px-6 py-3 hover:bg-slate-500" href="#">Read More</a>
+			</article>
+		</div>
+		<div class="lg:w-1/3 px-2.5 mb-5">
+			<article class="rounded-lg bg-white shadow-lg p-5">
+				<h2 class="text-xl font-bold mb-5">Lorem Ipsum</h2>
+				<p class="mb-6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, necessitatibus. Animi amet provident, repellendus ut necessitatibus quod dolores fugiat architecto reprehenderit commodi. Eum, iure necessitatibus.</p>
+				<a class="inline-block bg-slate-600 text-white rounded-md px-6 py-3 hover:bg-slate-500" href="#">Read More</a>
+			</article>
+		</div> -->

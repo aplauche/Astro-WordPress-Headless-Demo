@@ -1,0 +1,88 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../components/Layout.astro";
+
+// Build the paths for each of our blog posts
+export async function getStaticPaths() {
+  const response = await fetch("http://faker-headless.local/graphql",
+    {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        query: `
+        query AllSlugs {
+          posts {
+            nodes {
+              slug
+            }
+          }
+        }
+        `
+      }),
+    });
+
+  // destructure data from our JSON
+  const { data } = await response.json();
+
+  //  assign the array of nodes to "posts" variable for usability
+  const posts = data.posts.nodes
+
+  // transform our array of {slug: "post-slug"} objects into an array of {params: {slug: "post-slug"}}
+  const paths = posts.map(post => {
+    return {params: post}
+  })
+
+  return paths
+}
+
+// Fetch the single post we landed on
+const { slug } = Astro.params;
+
+const singleResponse = await fetch("http://faker-headless.local/graphql",
+    {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        query: `
+        query SinglePost($id: ID = "${slug}") {
+          post(idType: SLUG, id: $id) {
+            date
+            content
+            title
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+          }
+        }
+        `
+      }),
+    });
+
+// destructure data from our JSON
+const { data } = await singleResponse.json();
+
+//  assign the post info to singlePost variable for usability
+const singlePost = data.post
+
+---
+
+<Layout>
+
+  <article class="max-w-screen-md mx-auto">
+
+      <div class="text-center  w-auto mx-auto mb-5">
+        <p class="rounded-full bg-slate-300 py-2 px-4 inline-block">
+          {new Date(singlePost.date).toLocaleDateString('en-us', { year:"numeric", month:"long", day:"numeric"})}
+        </p>
+      </div>
+      <h1 class="text-center text-3xl text-bold mb-10">{singlePost.title}</h1>
+      <Image class="w-full object-cover aspect-2/3 mb-5" alt="" src={singlePost.featuredImage.node.sourceUrl} width={1500} height={1000} />
+      <!-- We can use the set:html directive with a self closing tag to output raw html -->
+      <div set:html={singlePost.content} />
+
+  </article>
+
+
+</Layout>
