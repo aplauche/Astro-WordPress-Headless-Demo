@@ -1,10 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import Layout from "../components/Layout.astro";
+import {API_BASE_URL} from "../constants"
 
 // Build the paths for each of our blog posts
 export async function getStaticPaths() {
-  const response = await fetch("http://faker-headless.local/graphql",
+  const response = await fetch(API_BASE_URL,
     {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
@@ -38,7 +39,7 @@ export async function getStaticPaths() {
 // Fetch the single post we landed on
 const { slug } = Astro.params;
 
-const singleResponse = await fetch("http://faker-headless.local/graphql",
+const singleResponse = await fetch(API_BASE_URL,
     {
       method: 'POST',
       headers: {'Content-Type':'application/json'},

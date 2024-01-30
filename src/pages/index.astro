@@ -1,8 +1,9 @@
 ---
 import { Image } from "astro:assets";
 import Layout from "../components/Layout.astro";
+import {API_BASE_URL} from "../constants"
 
-const response = await fetch("http://faker-headless.local/graphql",
+const response = await fetch(API_BASE_URL,
   {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
