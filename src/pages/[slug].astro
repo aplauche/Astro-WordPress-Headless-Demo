@@ -81,9 +81,8 @@ const singlePost = data.post
       <h1 class="text-center text-3xl text-bold mb-10">{singlePost.title}</h1>
       <Image class="w-full object-cover aspect-2/3 mb-5" alt="" src={singlePost.featuredImage.node.sourceUrl} width={1500} height={1000} />
       <!-- We can use the set:html directive with a self closing tag to output raw html -->
-      <div set:html={singlePost.content} />
+      <div set:html={singlePost.content} class="prose lg:prose-lg" />
 
   </article>
-
 
 </Layout>
