@@ -1,6 +1,14 @@
 ---
+import {getAllTags} from "../lib/client"
+
+const tags = await getAllTags()
 ---
 
 <header class="bg-slate-400 py-5 px-10 text-center">
   <a class="text-lg font-bold inline-block bg-slate-700 text-white py-4 px-8 rounded-md" href="/">Astro + WP</a>
+  <div>
+    {tags.map(tag => (
+      <a href={`/tags/${tag.slug}`}>{tag.name}</a>
+    ))}
+  </div>
 </header>

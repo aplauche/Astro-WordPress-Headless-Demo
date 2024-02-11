@@ -1,40 +1,12 @@
 ---
 import Card from "../components/Card.astro";
 import Layout from "../components/Layout.astro";
-import {API_BASE_URL} from "../constants"
+import {getAllPosts} from "../lib/client"
 
 // Astro passes getStaticPaths {paginate} function as destructured argument
 export async function getStaticPaths({paginate}) {
-  const response = await fetch(API_BASE_URL,
-  {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      query: `
-				query IndexPage {
-					posts(where: {orderby: {field: DATE, order: DESC}}) {
-						nodes {
-							slug
-							date
-							title
-							excerpt
-							featuredImage {
-								node {
-									sourceUrl
-								}
-							}
-						}
-					}
-				}
-      `
-    }),
-  });
-
-	// destructure data from our JSON
-	const { data } = await response.json();
-
-	//  assign the array of nodes to "posts" variable for usability
-	const posts = data.posts.nodes
+  
+	const posts = await getAllPosts()
 
 	// use pagination function to generate all our pages
 	return paginate(posts, {pageSize: 3})
