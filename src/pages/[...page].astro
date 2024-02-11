@@ -3,6 +3,7 @@ import Card from "../components/Card.astro";
 import Layout from "../components/Layout.astro";
 import {API_BASE_URL} from "../constants"
 
+// Astro passes getStaticPaths {paginate} function as destructured argument
 export async function getStaticPaths({paginate}) {
   const response = await fetch(API_BASE_URL,
   {
@@ -35,13 +36,15 @@ export async function getStaticPaths({paginate}) {
 	//  assign the array of nodes to "posts" variable for usability
 	const posts = data.posts.nodes
 
+	// use pagination function to generate all our pages
 	return paginate(posts, {pageSize: 3})
 }
 
 
-// All paginated data is passed on the "page" prop
+// All pagination data is passed through the "page" prop
 const { page } = Astro.props;
 
+// Paginated entries are on page.data - we re-assign to posts for convenience
 const posts = page.data
 
 ---
