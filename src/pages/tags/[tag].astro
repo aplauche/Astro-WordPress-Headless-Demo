@@ -2,30 +2,33 @@
 import Card from "../../components/Card.astro";
 import Layout from "../../components/Layout.astro";
 import {API_BASE_URL} from "../../constants"
-import {getAllTags, getSingleTagArchive} from "../../lib/client"
+import {getAllTags, getPostsByTag} from "../../lib/client"
 
 export async function getStaticPaths({paginate}) {
   const tags = await getAllTags()
 
   // transform our array into an array of {params: {tag: "tag-slug"}}  
   const paths = tags.map(tag => {
-    return {params: {tag: tag.slug}}
+    return {
+			params: {tag: tag.slug},
+			props: {tagName: tag.name}
+		}
   })
 
   return paths
-
-	//return paginate(posts, {pageSize: 3})
 }
 
 
 // Grab all the posts for the tag passed as a param in our dynamic route
 const { tag } = Astro.params;
+const { tagName } = Astro.props;
 
-const {tagName, posts} = await getSingleTagArchive(tag)
+const posts = await getPostsByTag(tag)
 
 ---
 
 <Layout>
+
 	<div class="bg-slate-200 rounded-lg py-12">
 		<h1 class="text-center text-3xl">{tagName}</h1>
 	</div>
@@ -35,11 +38,6 @@ const {tagName, posts} = await getSingleTagArchive(tag)
 			<Card post={post} />
 		))}
 	</div>
-<!-- 
-	<div class="flex gap-6 justify-center items-center py-12">
-		{page.url.prev ? <a class="p-3 rounded-md bg-slate-500 text-white" href={page.url.prev}>Previous</a> : <span class="text-gray-500 p-3 rounded-md block bg-gray-300">Previous</span>}
-		{page.url.next ? <a class="p-3 rounded-md bg-slate-500 text-white" href={page.url.next}>Next</a> : <span class="text-gray-500 p-3 rounded-md block bg-gray-300">Next</span>}
-	</div> -->
 
 </Layout>
 	

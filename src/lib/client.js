@@ -116,7 +116,7 @@ export const getAllTags = async () => {
     return data.tags.nodes
 }
 
-export const getSingleTagArchive = async (tag) => {
+export const getPostsByTag = async (tag) => {
   const response = await fetch(API_BASE_URL,
     {
       method: 'POST',
@@ -125,7 +125,6 @@ export const getSingleTagArchive = async (tag) => {
         query: `
           query SingleTag($id: ID = "${tag}") {
             tag(idType: SLUG, id: $id) {
-              name
               posts(where: {orderby: {field: DATE, order: DESC}}) {
                 nodes {
                   date
@@ -150,10 +149,6 @@ export const getSingleTagArchive = async (tag) => {
   const { data } = await response.json();
   
   const posts = data.tag.posts.nodes
-  const tagName = data.tag.name
 
-  return {
-    posts,
-    tagName
-  }
+  return posts
 }
