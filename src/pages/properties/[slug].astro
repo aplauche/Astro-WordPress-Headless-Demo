@@ -41,7 +41,7 @@ const property = await getSinglePropertyBySlug(slug)
           <tbody>
             <tr>
               <td class="border-b border-slate-600 py-4 font-bold">Price:</td>
-              <td class="border-b border-slate-600 text-right">${property.propertyFields.price}</td>
+              <td class="border-b border-slate-600 text-right">${new Intl.NumberFormat('en-US').format(property.propertyFields.price)}</td>
             </tr>
             <tr>
               <td class="border-b border-slate-600 py-4 font-bold">Square Footage:</td>

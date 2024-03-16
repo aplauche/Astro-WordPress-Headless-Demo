@@ -7,9 +7,11 @@ const {property} = Astro.props
   <article class="rounded-lg bg-white shadow-lg p-5 h-full flex flex-col items-start justify-between">
     <div>
       <Image class="w-full object-cover aspect-2/3 mb-5" alt="" src={property.featuredImage.node.sourceUrl} width={600} height={400} />
-      <h2 class="text-xl font-bold mb-5">{property.title}</h2>
-      <p class="mb-6">${property.propertyFields.price}</p>
+      <div class="mb-6 flex items-end justify-between">
+        <h2 class="text-xl font-bold">{property.title}</h2>
+        <p>${new Intl.NumberFormat('en-US').format(property.propertyFields.price)}</p>
+      </div>
     </div>
-    <a class="inline-block bg-slate-600 text-white rounded-md px-6 py-3 hover:bg-slate-500" href={`/properties/${property.slug}`}>Read More</a>
+    <a class="inline-block bg-slate-600 text-white rounded-md px-6 py-3 hover:bg-slate-500" href={`/properties/${property.slug}`}>View Property</a>
   </article>
 </div>

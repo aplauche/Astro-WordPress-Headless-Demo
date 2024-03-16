@@ -8,9 +8,13 @@ const tags = await getAllTags()
   <div class="container mx-auto flex justify-between items-center">
     <a class="text-lg font-bold inline-block bg-slate-700 text-white py-4 px-8 rounded-md" href="/">Astro + WP</a>
     <div class="flex items-center gap-8">
+      
+      <a class="font-bold hover:underline" href={`/properties`}>Properties</a>
+
       {tags.map(tag => (
         <a class="font-bold hover:underline" href={`/tags/${tag.slug}`}>{tag.name}</a>
       ))}
+
     </div>
   </div>
 </header>
