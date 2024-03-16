@@ -63,6 +63,7 @@ export const getSinglePostBySlug = async (slug) => {
     return data.post
 }
 
+
 export const getAllPostSlugs = async () => {
   const response = await fetch(API_BASE_URL,
     {
@@ -151,4 +152,99 @@ export const getPostsByTag = async (tag) => {
   const posts = data.tag.posts.nodes
 
   return posts
+}
+
+export const getAllProperties = async () => {
+  const response = await fetch(API_BASE_URL, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      query: `
+        query AllProperties {
+          properties {
+            nodes {
+              propertyFields {
+                latitude
+                longitude
+                price
+                squareFootage
+              }
+              title(format: RENDERED)
+              slug
+              featuredImage {
+                node {
+                  sourceUrl
+                }
+              }
+            }
+          }
+        }
+      `
+    })
+  })
+
+  const { data } = await response.json();
+
+  const properties = data.properties.nodes
+
+  return properties
+}
+
+
+export const getAllPropertySlugs = async () => {
+  const response = await fetch(API_BASE_URL, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      query: `
+        query AllProperties {
+          properties {
+            nodes {
+              slug
+            }
+          }
+        }
+      `
+    })
+  })
+
+  const { data } = await response.json();
+
+  const properties = data.properties.nodes
+
+  return properties
+}
+
+
+export const getSinglePropertyBySlug = async (slug) => {
+  const response = await fetch(API_BASE_URL,
+    {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        query: `
+        query propertyBySlug {
+          propertyBy(slug: "${slug}") {
+            propertyFields {
+              latitude
+              longitude
+              price
+              squareFootage
+            }
+            title(format: RENDERED)
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+          }
+        }
+        `
+      }),
+    });
+
+    // destructure data from our JSON
+    const { data } = await response.json();
+
+    return data.propertyBy
 }

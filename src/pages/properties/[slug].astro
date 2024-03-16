@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../../components/Layout.astro";
+import {getSinglePropertyBySlug, getAllPropertySlugs} from "../../lib/client"
+
+
+// Build the paths for each of our properties
+export async function getStaticPaths() {
+
+  const slugs = await getAllPropertySlugs()
+
+  // transform our array of {slug: "property-slug"} objects into an array of {params: {slug: "property-slug"}}
+  const paths = slugs.map(slug => {
+    return {params: slug}
+  })
+
+  return paths
+}
+
+// Fetch the single property we landed on
+const { slug } = Astro.params;
+
+//  assign the property info to property variable for usability
+const property = await getSinglePropertyBySlug(slug)
+
+---
+
+<Layout>
+
+  <article class="max-w-screen-md mx-auto">
+
+    <h1 class="text-3xl text-center py-8 font-bold">{property.title}</h1>
+    <Image class="w-full object-cover aspect-2/3 mb-5" alt="" src={property.featuredImage.node.sourceUrl} width={1500} height={1000} />
+    <table class="w-full table-auto border-collapse border-t border-slate-600">
+      <tbody>
+        <tr>
+          <td class="border-b border-slate-600 py-4 font-bold">Price:</td>
+          <td class="border-b border-slate-600 text-right">${property.propertyFields.price}</td>
+        </tr>
+        <tr>
+          <td class="border-b border-slate-600 py-4 font-bold">Square Footage:</td>
+          <td class="border-b border-slate-600 text-right">{property.propertyFields.squareFootage} ft<sup>2</sup></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </article>
+
+</Layout>

@@ -1,0 +1,23 @@
+---
+
+import Layout from "../../components/Layout.astro";
+import PropertyCard from "../../components/PropertyCard.astro";
+import {getAllProperties} from "../../lib/client"
+
+const properties = await getAllProperties();
+
+---
+
+<Layout>
+
+  <div class="bg-slate-200 rounded-lg py-12">
+		<h1 class="text-center text-3xl">Properties for sale</h1>
+	</div>
+	
+	<div class="flex flex-wrap pt-5 -mx-2.5">
+    {properties.map(property => (
+      <PropertyCard property={property} />
+    ))}
+	</div>
+
+</Layout>
