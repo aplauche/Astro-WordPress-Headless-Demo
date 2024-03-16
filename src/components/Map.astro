@@ -1,0 +1,31 @@
+---
+const {lat, lng} = Astro.props
+---
+
+<div 
+id="map" 
+style="height: 400px; width: 100%;" 
+data-lat={lat} 
+data-lng={lng}
+></div>
+
+<script>
+
+  import L from 'leaflet'
+
+  const mapElement = document.getElementById('map');
+
+  const lat = mapElement?.dataset.lat
+  const lng = mapElement?.dataset.lng
+  const zoomLevel = 13
+
+  const map = L.map(mapElement).setView([lat, lng], zoomLevel);
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+
+  const marker = L.marker([lat, lng]).addTo(map);
+
+</script>
